@@ -5,7 +5,7 @@ const { Ocean, Logger } = require('@oceanprotocol/squid');
         nodeUri: 'http://localhost:8545'
     })
 
-    const orders = await ocean.order.getOrdersByConsumer('0x970e8f18ebfEa0B08810f33a5A40438b9530FBCF')
+    const accounts = await ocean.getAccounts()
 
-    Logger.log('Orders', JSON.stringify(orders, null, 2))
+    Logger.log(JSON.stringify(accounts, null, 2))
 })()

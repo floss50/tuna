@@ -1,4 +1,4 @@
-const { Ocean, Asset, Logger } = require('@oceanprotocol/squid')
+const { Ocean, Logger, Asset } = require('../../../squid-js/dist/squid')
 
 const name = 'Tuna Test2'
 const description = 'Fine tuna test' + Math.floor(Math.random() * 100000) + 1

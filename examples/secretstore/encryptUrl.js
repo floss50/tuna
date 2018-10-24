@@ -11,12 +11,18 @@ const { sha256 } = require('js-sha256');
         address: '0xed243adfb84a6626eba46178ccb567481c6e655d'
     })
 
-    const document = {
-        ocean: 'is great'
-    }
+    const url = 'http://test.com'
 
     const docId = sha256(Math.random().toString(10))
-    const encryptedDocument = await secretStore.encryptDocument(docId, document)
+    try {
+        const encryptedUrl = await secretStore.encryptDocument(docId, url)
 
-    Logger.log(encryptedDocument)
+        Logger.log(encryptedUrl)
+
+        const decryptedUrl = await secretStore.decryptDocument(docId, encryptedUrl)
+
+        Logger.log(decryptedUrl)
+    } catch (err) {
+        Logger.error(err)
+    }
 })()

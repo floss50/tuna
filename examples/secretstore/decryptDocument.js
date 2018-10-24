@@ -1,14 +1,6 @@
 const SecretStore = require('@oceanprotocol/secret-store-client').default
 const { Logger } = require('@oceanprotocol/squid')
-
-function generateRandomId() {
-    const { BigNumber } = require('bignumber.js')
-
-    const id = BigNumber.random(64).toString().replace('0.', '')
-
-    // sometimes it only generates 63 digits
-    return id.length === 63 ? id + '0' : id
-}
+const { sha256 } = require('js-sha256');
 
 (async () => {
     const secretStore = new SecretStore({
@@ -23,7 +15,7 @@ function generateRandomId() {
         ocean: 'is great'
     }
 
-    const documentId = generateRandomId()
+    const documentId = sha256(Math.random().toString(10))
     const encryptedDocument = await secretStore.encryptDocument(documentId, document)
 
     Logger.log('Encrypted Document:', encryptedDocument)

@@ -5,10 +5,10 @@ const { sha256 } = require('js-sha256');
 (async () => {
     const secretStore = new SecretStore({
         parityUri: 'http://localhost:9545',
-        secretStoreUri: 'https://secret-store.dev-ocean.com',
+        secretStoreUri: 'http://localhost:12001',
         password: 'unittest',
         address: '0xed243adfb84a6626eba46178ccb567481c6e655d',
-        threshold: 2
+        threshold: 0
     })
 
     const document = {

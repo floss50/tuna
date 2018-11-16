@@ -5,8 +5,8 @@ const { sha256 } = require('js-sha256');
 (async () => {
     const secretStore = new SecretStore({
         parityUri: 'http://localhost:9545',
-        secretStoreUri: 'https://secret-store.dev-ocean.com',
-        threshold: 2,
+        secretStoreUri: 'http://localhost:12001',
+        threshold: 0,
         password: 'unittest',
         address: '0xed243adfb84a6626eba46178ccb567481c6e655d'
     })
@@ -18,5 +18,5 @@ const { sha256 } = require('js-sha256');
     const docId = sha256(Math.random().toString(10))
     const encryptedDocument = await secretStore.encryptDocument(docId, document)
 
-    Logger.log(encryptedDocument)
+    Logger.log('EncryptedDocument', encryptedDocument)
 })()

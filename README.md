@@ -20,6 +20,13 @@
 
 ## Get started
 
+```bash
+virtualenv venv -p python3
+source venv/bin/activate
+python setup.py install
+npm i
+```
+
 List orders
 ```bash
 node listOrders.js

@@ -1,9 +1,8 @@
 const { Ocean, Logger } = require('@oceanprotocol/squid');
+const config = require('../config');
 
 (async () => {
-    const ocean = await Ocean.getInstance({
-        nodeUri: 'http://localhost:8545'
-    })
+    const ocean = await Ocean.getInstance(config)
 
     const accounts = await ocean.getAccounts()
 

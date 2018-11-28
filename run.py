@@ -3,18 +3,35 @@ import argparse
 import json
 import os
 import subprocess
+import logging
+
+logging.getLogger().setLevel(logging.WARNING)
 
 parser = argparse.ArgumentParser(description='End-to-end Ocean Testing')
 parser.add_argument('action', metavar='action', type=str, help='the action to run')
 parser.add_argument('-c', '--client', dest='client', type=str, help='the client to run on')
 parser.add_argument('-i', '--input', dest='input', type=str, help='input string')
+parser.add_argument('-f', '--file-input', dest='file', type=str, help='input file')
 parser.add_argument('--config', dest='config', type=str, help='supply a config file')
+parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='verbose output')
 
 args = parser.parse_args()
 
 
+# helper functions
+def dump_js(file, data):
+    data_js = json.dumps(data, indent=4, separators=(',', ': ')).replace('\"', '\'')
+    if args.client == 'browser':
+        data_js = 'const {} = {}'.format(file, data_js)
+    elif args.client == 'node':
+        data_js = 'module.exports = Object.freeze({});'.format(data_js)
+
+    with open('{}/{}.js'.format(args.client, file), 'w') as dump_file_js:
+        dump_file_js.write(data_js)
+
+
 # Prepare the config for each client
-CONFIG_FILE = 'config.ini'
+CONFIG_FILE = os.getenv('CONFIG_FILE', 'config.ini')
 if args.config is not None:
     CONFIG_FILE = args.config
 
@@ -32,15 +49,7 @@ if args.client in ['browser', 'node']:
         'aquariusUri': config['resources']['aquarius.url'],
         'brizoUri': config['resources']['brizo.url'],
     }
-
-    config_js = json.dumps(config_js, indent=4, separators=(',', ': ')).replace('\"', '\'')
-    if args.client == 'browser':
-        config_js = 'const config = {}'.format(config_js)
-    elif args.client == 'node':
-        config_js = 'module.exports = Object.freeze({});'.format(config_js)
-
-    with open('{}/config.js'.format(args.client), 'w') as config_file_js:
-        config_file_js.write(config_js)
+    dump_js('config', config_js)
 
 # python: config available as ```import CONFIG_FILE from ..config```
 if args.client == 'python':
@@ -49,44 +58,46 @@ if args.client == 'python':
 
 
 # Prepare the input for each client
-if args.input:
-    try:
-        input_str = json.loads(args.input)
-    except json.decoder.JSONDecodeError as e:
-        input_str = args.input
+if args.input or args.file:
+    if args.input:
+        try:
+            input_json = json.loads(args.input)
+        except json.decoder.JSONDecodeError as e:
+            input_json = args.input
+    elif args.file:
+        try:
+            with open(args.file) as input_file:
+                input_json = json.load(input_file)
+        except json.decoder.JSONDecodeError as e:
+            with open(args.file) as input_file:
+                input_json = "".join(input_file.readlines()).replace("\n", "")
+    # Node/JS: input available as ```const input = require('../input.js');```
     if args.client in ['browser', 'node']:
-        input_json = json.dumps(input_str, indent=4, separators=(',', ': ')).replace('\"', '\'')
+        dump_js('input', input_json)
+
+    # python: config available as ```import INPUT from ..input```
     if args.client == 'python':
-        input_json = input_str
-
-# Node/JS: input available as ```const input = require('../input.js');```
-if args.input and args.client in ['browser', 'node']:
-    if args.client == 'browser':
-        input_js = 'const input = {}'.format(input_json)
-    elif args.client == 'node':
-        input_js = 'module.exports = Object.freeze({});'.format(input_json)
-
-    with open('{}/input.js'.format(args.client), 'w') as input_file_js:
-        input_file_js.write(input_js)
-
-# python: config available as ```import INPUT from ..input```
-if args.input and args.client == 'python':
-    with open('{}/input.py'.format(args.client), 'w') as input_file_py:
-        input_file_py.write('INPUT = {}'.format(input_json))
-
+        if isinstance(input_json, str):
+            input_json = "'{}'".format(input_json)
+        with open('{}/input.py'.format(args.client), 'w') as input_file_py:
+            input_file_py.write('INPUT = {}'.format(input_json))
 
 # Create and run the command
 if args.client == 'browser':
     os.chdir(args.client)
     cmd = "python -m http.server 8000"
     print('open your browser in dev console on http://localhost:8000')
+
 elif args.client == 'node':
     os.chdir(args.client)
     cmd = "node {}.js".format(args.action)
+
 elif args.client == 'python':
     cmd = "python -m {}.{}".format(args.client, args.action.replace("/", "."))
 
 process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
 output, error = process.communicate()
-print(output.decode('utf-8').partition("__result__")[-1])
-
+if args.verbose:
+    print(output.decode('utf-8'))
+else:
+    print(output.decode('utf-8').partition("__result__")[-1])

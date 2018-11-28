@@ -25,6 +25,7 @@ virtualenv venv -p python3
 source venv/bin/activate
 python pip install -r requirements.txt
 npm i
+export CONFIG_FILE=<your_config_file.ini>
 ```
 
 ### Accounts
@@ -39,6 +40,26 @@ which outputs:
     "id": "0x64137aF0104d2c96C44bb04AC06f09eC84CC5Ae4"
   }
 ]
+```
+#### List balance
+```bash
+python run.py accounts/balance -c {browser, node, python}
+```
+which outputs:
+```json
+{
+  "eth": 1000000000,
+  "ocn": 400
+}
+```
+
+### Tokens
+```bash
+python run.py tokens/request -c {browser, node, python} -i 42 
+```
+which outputs:
+```json
+"42 tokens received"
 ```
 
 ### Secret Store

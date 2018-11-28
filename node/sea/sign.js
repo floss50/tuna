@@ -1,16 +1,8 @@
 const { Ocean, Logger } = require('@oceanprotocol/squid');
+const config = require('../config');
 
 (async () => {
-    const ocean = await Ocean.getInstance({
-        nodeUri: 'http://localhost:8545',
-        aquariusUri: 'http://localhost:5000',
-        brizoUri: 'http://localhost:8030',
-        parityUri: 'http://localhost:9545',
-        secretStoreUri: 'http://localhost:12001',
-        password: 'unittest',
-        address: '0xed243adfb84a6626eba46178ccb567481c6e655d',
-        threshold: 0
-    })
+    const ocean = await Ocean.getInstance(config)
 
     const accounts = await ocean.getAccounts()
     const publisherAccount = accounts[0]

@@ -23,18 +23,13 @@
 ```bash
 virtualenv venv -p python3
 source venv/bin/activate
-python setup.py install
+python pip install -r requirements.txt
 npm i
-```
-
-List orders
-```bash
-node listOrders.js
 ```
 
 List accounts
 ```bash
-node listAccounts.js
+python run.py accounts/list --client={browser, node, python}
 ```
 
 ## License

@@ -6,5 +6,5 @@ const config = require('../config');
 
     const accounts = await ocean.getAccounts()
 
-    Logger.log(JSON.stringify(accounts, null, 2))
+    Logger.log(`__result__${JSON.stringify(accounts, null, 2)}`)
 })()

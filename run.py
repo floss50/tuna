@@ -15,10 +15,9 @@ CONFIG_FILE = 'config.ini'
 if args.config is not None:
     CONFIG_FILE = args.config
 
-config = configparser.ConfigParser()
-config.read(CONFIG_FILE)
-
 if args.client in ['browser', 'node']:
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
     config_js = {
         'nodeUri': config['keeper-contracts']['keeper.url'],
         'parityUri': config['keeper-contracts']['parity.url'],
@@ -39,8 +38,21 @@ if args.client in ['browser', 'node']:
     with open('{}/config.js'.format(args.client), 'w') as config_file_js:
         config_file_js.write(config_js)
 
+if args.client == 'python':
+    with open('{}/config.py'.format(args.client), 'w') as config_file_py:
+        config_file_py.write('CONFIG_FILE = "{}"'.format(CONFIG_FILE))
+
 if args.client == 'browser':
-    os.chdir('./browser')
-    cmd_browser = "python -m http.server"
-    process = subprocess.Popen(cmd_browser.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    os.chdir(args.client)
+    cmd = "python -m http.server 8000"
+    print('open your browser in dev console on http://localhost:8000')
+elif args.client == 'node':
+    os.chdir(args.client)
+    cmd = "node {}.js".format(args.action)
+elif args.client == 'python':
+    cmd = "python -m {}.{}".format(args.client, args.action.replace("/", "."))
+
+process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+output, error = process.communicate()
+print(output.decode('utf-8').partition("__result__")[-1])
+

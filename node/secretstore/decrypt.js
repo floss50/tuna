@@ -9,7 +9,7 @@ const input = require('../input');
     try {
         const decryptedDocument = await secretStore.decryptDocument(input.docId, input.encryptedDocument)
 
-        Logger.log('__result__DecryptedDocument', decryptedDocument)
+        Logger.log('__result__', decryptedDocument)
     } catch (err) {
         Logger.error(err)
     }

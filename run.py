@@ -49,20 +49,30 @@ if args.client == 'python':
 
 
 # Prepare the input for each client
-# Node/JS: input available as ```const input = require('../input.js');```
-if args.input and args.client in ['browser', 'node']:
+if args.input:
     try:
         input_str = json.loads(args.input)
     except json.decoder.JSONDecodeError as e:
         input_str = args.input
-    input_js = json.dumps(input_str, indent=4, separators=(',', ': ')).replace('\"', '\'')
+    if args.client in ['browser', 'node']:
+        input_json = json.dumps(input_str, indent=4, separators=(',', ': ')).replace('\"', '\'')
+    if args.client == 'python':
+        input_json = input_str
+
+# Node/JS: input available as ```const input = require('../input.js');```
+if args.input and args.client in ['browser', 'node']:
     if args.client == 'browser':
-        input_js = 'const input = {}'.format(input_js)
+        input_js = 'const input = {}'.format(input_json)
     elif args.client == 'node':
-        input_js = 'module.exports = Object.freeze({});'.format(input_js)
+        input_js = 'module.exports = Object.freeze({});'.format(input_json)
 
     with open('{}/input.js'.format(args.client), 'w') as input_file_js:
         input_file_js.write(input_js)
+
+# python: config available as ```import INPUT from ..input```
+if args.input and args.client == 'python':
+    with open('{}/input.py'.format(args.client), 'w') as input_file_py:
+        input_file_py.write('INPUT = {}'.format(input_json))
 
 
 # Create and run the command

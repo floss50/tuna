@@ -27,9 +27,43 @@ python pip install -r requirements.txt
 npm i
 ```
 
-List accounts
+### Accounts
+#### List accounts
 ```bash
 python run.py accounts/list --client={browser, node, python}
+```
+which outputs:
+```json
+[
+  {
+    "id": "0x64137aF0104d2c96C44bb04AC06f09eC84CC5Ae4"
+  }
+]
+```
+
+### Secret Store
+#### Encrypt documents
+```bash
+python run.py secretstore/encrypt -c {browser, node, python} -i "much secret wow"
+```
+which outputs:
+```json
+{
+  "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
+  "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
+}
+```
+
+#### Decrypt documents
+```bash
+python run.py secretstore/decrypt -c {browser, node, python} -i '{
+  "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
+  "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
+}'
+```
+which outputs:
+```json
+"much secret wow"
 ```
 
 ## License

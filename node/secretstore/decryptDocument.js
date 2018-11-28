@@ -1,15 +1,10 @@
 const SecretStore = require('@oceanprotocol/secret-store-client').default
 const { Logger } = require('@oceanprotocol/squid')
 const { sha256 } = require('js-sha256');
+const config = require('../config');
 
 (async () => {
-    const secretStore = new SecretStore({
-        parityUri: 'http://localhost:9545',
-        secretStoreUri: 'http://localhost:12001',
-        password: 'unittest',
-        address: '0xed243adfb84a6626eba46178ccb567481c6e655d',
-        threshold: 0
-    })
+    const secretStore = new SecretStore(config)
 
     const document = {
         ocean: 'is great'
@@ -22,5 +17,5 @@ const { sha256 } = require('js-sha256');
 
     const decryptedDocument = await secretStore.decryptDocument(documentId, encryptedDocument)
 
-    Logger.log('Decrypted Document:', JSON.stringify(decryptedDocument, null, 2))
+    Logger.log('__result__Decrypted Document:', JSON.stringify(decryptedDocument, null, 2))
 })()

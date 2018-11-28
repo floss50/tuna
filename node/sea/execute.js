@@ -1,5 +1,6 @@
 const { Ocean, Logger } = require('@oceanprotocol/squid');
 const config = require('../config');
+const input = require('../input');
 
 (async () => {
     const ocean = await Ocean.getInstance(config)
@@ -10,55 +11,7 @@ const config = require('../config');
 
     Logger.log('Publisher ID:', publisherAccount.getId())
 
-    const metaData = {
-        additionalInformation: {
-            structuredMarkup: [
-                {
-                    mediaType: 'application/ld+json',
-                    uri: 'http://skos.um.es/unescothes/C01194/jsonld'
-                },
-                {
-                    mediaType: 'text/turtle',
-                    uri: 'http://skos.um.es/unescothes/C01194/turtle'
-                }
-            ],
-            updateFrecuency: 'yearly',
-            checksum: 'efdd14d39feb726e321931f408b3454d26f1a4899bcc608a68b5397f23203174'
-        },
-        base: {
-            name: 'Office Humidity',
-            type: 'dataset',
-            description: 'Weather information of UK including temperature and humidity',
-            size: '3.1gb',
-            dateCreated: '2012-02-01T10:55:11+00:00',
-            author: 'Met Office',
-            license: 'CC-BY',
-            copyrightHolder: 'Met Office',
-            encoding: 'UTF-8',
-            compression: 'zip',
-            contentType: 'text/csv',
-            workExample: 'stationId,latitude,longitude,datetime,temperature,humidity423432fsd,51.509865,-0.118092,2011-01-01T10:55:11+00:00,7.2,68',
-            contentUrls: [
-                'https://testocnfiles.blob.core.windows.net/testfiles/testzkp.zip',
-                'https://testocnfiles.blob.core.windows.net/testfiles/testzkp.zip'
-            ],
-            links: [
-                { sample1: 'http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-daily/' },
-                { sample2: 'http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-averages-25km/' },
-                { fieldsDescription: 'http://data.ceda.ac.uk/badc/ukcp09/' }
-            ],
-            inLanguage: 'en',
-            tags: 'weather, uk, 2011, temperature, humidity',
-            price: 10
-        },
-        curation: {
-            numVotes: 125,
-            rating: 0.93,
-            schema: 'Binary Votting'
-        }
-    }
-
-    const ddo = await ocean.registerAsset(metaData, publisherAccount)
+    const ddo = await ocean.resolveDID(input)
     Logger.log('DID:', ddo.id)
 
     const accessService = ddo.findServiceByType('Access')
@@ -67,7 +20,13 @@ const config = require('../config');
     Logger.log('ServiceAgreementId', signServiceAgreementResult.serviceAgreementId)
     Logger.log('serviceAgreementSignature', signServiceAgreementResult.serviceAgreementSignature)
 
-    const serviceAgreement = await ocean.executeServiceAgreement(ddo.id, accessService.serviceDefinitionId,
-        signServiceAgreementResult.serviceAgreementId, signServiceAgreementResult.serviceAgreementSignature, consumerAccount, publisherAccount)
+    const serviceAgreement = await ocean
+        .executeServiceAgreement(
+            ddo.id,
+            accessService.serviceDefinitionId,
+            signServiceAgreementResult.serviceAgreementId,
+            signServiceAgreementResult.serviceAgreementSignature,
+            consumerAccount,
+            publisherAccount)
     Logger.log('ServiceAgreementId', serviceAgreement.getId())
 })()

@@ -9,6 +9,7 @@ const input = require('../input');
     const account = accounts.filter(account => account.id === config.address)[0]
     console.log(account, input)
     await account.requestTokens(input)
+    // BUG: doesn't update balance
     const balance = await account.getOceanBalance()
     console.log(balance)
     Logger.log(`__result__${account.id} received ${input} tokens`)

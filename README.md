@@ -88,6 +88,25 @@ which outputs:
  }
 ```
 
+### Service Execution Agreements
+#### Sign
+```bash
+> ./tuna.py sea/sign -c {node*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+?
+```
+#### Execute
+```bash
+> ./tuna.py sea/execute -c {node*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+?
+```
+
+
 ### SecretStore
 #### Encrypt
 ```bash

@@ -28,10 +28,11 @@ npm i
 export CONFIG_FILE=<your_config_file.ini>
 ```
 
+> (*) means there's a bug 
 ### Accounts
 #### List accounts
 ```bash
-python run.py accounts/list --client={browser, node, python}
+python run.py accounts/list --client={node, python}
 ```
 which outputs:
 ```json
@@ -41,9 +42,9 @@ which outputs:
   }
 ]
 ```
-#### List balance
+#### Get balance
 ```bash
-python run.py accounts/balance -c {browser, node, python}
+python run.py accounts/balance -c {node, python}
 ```
 which outputs:
 ```json
@@ -54,18 +55,43 @@ which outputs:
 ```
 
 ### Tokens
+#### Request Ocean Tokens [faucet]
 ```bash
-python run.py tokens/request -c {browser, node, python} -i 42 
+python run.py tokens/request -c {node*, python} -i 42 
 ```
 which outputs:
 ```json
 "42 tokens received"
 ```
 
+### Assets
+#### Register
+```bash
+python run.py assets/register -c {browser, node, python} -f testdata/metadata-example-weather.json 
+```
+which outputs:
+```json
+ did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf
+```
+#### Resolve
+```bash
+python run.py assets/resolve -c {node, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+ {                                                                                                                                                                                                                                                                                                                       
+  "@context": "https://w3id.org/future-method/v1",                                                                                                                                                                                                                                                                      
+  "authentication": [...],
+  "id": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "publicKey": [...],
+  "service": [...]
+ }
+```
+
 ### Secret Store
 #### Encrypt documents
 ```bash
-python run.py secretstore/encrypt -c {browser, node, python} -i "much secret wow"
+python run.py secretstore/encrypt -c {node, python} -i "much secret wow"
 ```
 which outputs:
 ```json
@@ -77,7 +103,7 @@ which outputs:
 
 #### Decrypt documents
 ```bash
-python run.py secretstore/decrypt -c {browser, node, python} -i '{
+python run.py secretstore/decrypt -c {node*, python} -i '{
   "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
   "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
 }'

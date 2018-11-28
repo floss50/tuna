@@ -30,9 +30,9 @@ export CONFIG_FILE=<your_config_file.ini>
 
 > (*) means there's a bug 
 ### Accounts
-#### List accounts
+#### List
 ```bash
-python run.py accounts/list --client={node, python}
+> python run.py accounts/list --client={node, python}
 ```
 which outputs:
 ```json
@@ -42,9 +42,9 @@ which outputs:
   }
 ]
 ```
-#### Get balance
+#### Balance
 ```bash
-python run.py accounts/balance -c {node, python}
+> python run.py accounts/balance -c {node, python}
 ```
 which outputs:
 ```json
@@ -55,9 +55,9 @@ which outputs:
 ```
 
 ### Tokens
-#### Request Ocean Tokens [faucet]
+#### Request
 ```bash
-python run.py tokens/request -c {node*, python} -i 42 
+> python run.py tokens/request -c {node*, python} -i 42 
 ```
 which outputs:
 ```json
@@ -67,7 +67,7 @@ which outputs:
 ### Assets
 #### Register
 ```bash
-python run.py assets/register -c {browser, node, python} -f testdata/metadata-example-weather.json 
+> python run.py assets/register -c {browser, node, python} -f testdata/metadata-example-weather.json 
 ```
 which outputs:
 ```json
@@ -75,7 +75,7 @@ which outputs:
 ```
 #### Resolve
 ```bash
-python run.py assets/resolve -c {node, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+> python run.py assets/resolve -c {node, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
 ```
 which outputs:
 ```json
@@ -88,10 +88,10 @@ which outputs:
  }
 ```
 
-### Secret Store
-#### Encrypt documents
+### SecretStore
+#### Encrypt
 ```bash
-python run.py secretstore/encrypt -c {node, python} -i "much secret wow"
+> python run.py secretstore/encrypt -c {node, python} -i "much secret wow"
 ```
 which outputs:
 ```json
@@ -101,9 +101,9 @@ which outputs:
 }
 ```
 
-#### Decrypt documents
+#### Decrypt
 ```bash
-python run.py secretstore/decrypt -c {node*, python} -i '{
+> python run.py secretstore/decrypt -c {node*, python} -i '{
   "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
   "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
 }'

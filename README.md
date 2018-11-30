@@ -88,6 +88,18 @@ which outputs:
  }
 ```
 
+#### Search
+```bash
+> ./tuna.py assets/search -c {node, python*} -i weather 
+```
+which outputs:
+```json
+[  
+    "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+    ...
+]
+```
+
 ### Service Execution Agreements
 #### Sign
 ```bash

@@ -9,8 +9,6 @@ import logging
 logging.getLogger().setLevel(logging.WARNING)
 
 ocean = Ocean(CONFIG_FILE)
-account = ocean.accounts[ocean.config.parity_address]
+assets = ocean.search_assets(INPUT)
 
-ddo = ocean.resolve_did(INPUT)
-
-print("__result__{}".format(json.dumps(ddo.as_dictionary(), indent=2, sort_keys=True)))
+print("__result__{}".format(json.dumps([a.id for a in assets], indent=2, sort_keys=True)))

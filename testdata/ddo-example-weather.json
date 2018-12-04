@@ -1,0 +1,274 @@
+{
+  "@context": "https://w3id.org/future-method/v1",
+  "authentication": [
+    {
+      "type": "RsaSignatureAuthentication2018",
+      "publicKey": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf#keys-1"
+    }
+  ],
+  "id": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "publicKey": [
+    {
+      "id": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf#keys-1"
+    },
+    {
+      "type": "Ed25519VerificationKey2018"
+    },
+    {
+      "owner": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+    },
+    {
+      "publicKeyBase58": "ee253afa322a137684dd92c50dd921cf8479d66eac80583bc97b608b93ac1d9c7aeb2bc797e172aa913ae7f76f4420349d9c9b408e471c4df6e80de5a762cc1d"
+    }
+  ],
+  "service": [
+    {
+      "type": "Access",
+      "purchaseEndpoint": "http://localhost:8030/api/v1/brizo/services/access/purchase?",
+      "serviceEndpoint": "http://localhost:8030/api/v1/brizo/services/consume?pubKey=0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e&serviceId=0&url=0xe9f8111253283962232fb1f05a8b6013eb6a4e36eafff7f860159772232707bff4f62e02a4c2d71b4c7896634fd82fc69fb937e2acd2a98dcc63ad1ac8a9858d4b9104af9703b20d1227f33c61853a5cd2f21cc130268f4c4f82babef8d2c24a48fbe269299d8dafa3aa95e60b255a7cfcbbd38d648975dc3fd4d866ef67052f7f8ac88e757361f65714b610728204a961c07460a49887",
+      "serviceDefinitionId": "0",
+      "templateId": "0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d",
+      "serviceAgreementContract": {
+        "contractName": "ServiceAgreement",
+        "fulfillmentOperator": 1,
+        "events": [
+          {
+            "name": "ExecuteAgreement",
+            "actorType": [
+              "consumer"
+            ],
+            "handlers": {
+              "moduleName": "payment",
+              "functionName": "lockPayment",
+              "version": "0.1"
+            }
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "name": "lockPayment",
+          "dependencies": [],
+          "timeout": 0,
+          "isTerminalCondition": false,
+          "conditionKey": "0x82d14052c7bc981d4a5a71c3489f3605500638236bbc7b1b9a1e1aa32c45682b",
+          "contractName": "PaymentConditions",
+          "functionName": "lockPayment",
+          "index": 0,
+          "parameters": [
+            {
+              "name": "assetId",
+              "type": "bytes32",
+              "value": "0x0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+            },
+            {
+              "name": "price",
+              "type": "uint256",
+              "value": 10
+            }
+          ],
+          "events": [
+            {
+              "name": "PaymentReleased",
+              "actorType": [
+                "consumer"
+              ],
+              "handlers": {
+                "moduleName": "serviceAgreement",
+                "functionName": "fulfillAgreement",
+                "version": "0.1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "grantAccess",
+          "dependencies": [
+            {
+              "name": "lockPayment",
+              "timeout": 0
+            }
+          ],
+          "timeout": 10,
+          "isTerminalCondition": false,
+          "conditionKey": "0x7977de5415c29441cf28415e51a61762afc19d4fe5051b24359bf5cd264301f9",
+          "contractName": "AccessConditions",
+          "functionName": "grantAccess",
+          "index": 1,
+          "parameters": [
+            {
+              "name": "assetId",
+              "type": "bytes32",
+              "value": "0x0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+            },
+            {
+              "name": "documentKeyId",
+              "type": "bytes32",
+              "value": "0x0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+            }
+          ],
+          "events": [
+            {
+              "name": "PaymentReleased",
+              "actorType": [
+                "consumer"
+              ],
+              "handlers": {
+                "moduleName": "serviceAgreement",
+                "functionName": "fulfillAgreement",
+                "version": "0.1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "releasePayment",
+          "dependencies": [
+            {
+              "name": "grantAccess",
+              "timeout": 0
+            }
+          ],
+          "timeout": 10,
+          "isTerminalCondition": true,
+          "conditionKey": "0x457c7abac801eda1f9f5989fae37d835459265078bbe2496ed050805cae2ece5",
+          "contractName": "PaymentConditions",
+          "functionName": "releasePayment",
+          "index": 2,
+          "parameters": [
+            {
+              "name": "assetId",
+              "type": "bytes32",
+              "value": "0x0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+            },
+            {
+              "name": "price",
+              "type": "uint256",
+              "value": 10
+            }
+          ],
+          "events": [
+            {
+              "name": "PaymentReleased",
+              "actorType": [
+                "consumer"
+              ],
+              "handlers": {
+                "moduleName": "serviceAgreement",
+                "functionName": "fulfillAgreement",
+                "version": "0.1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "refundPayment",
+          "dependencies": [
+            {
+              "name": "lockPayment",
+              "timeout": 0
+            },
+            {
+              "name": "grantAccess",
+              "timeout": 1
+            }
+          ],
+          "timeout": 10,
+          "isTerminalCondition": true,
+          "conditionKey": "0x238e473bbc57ba50bb64a10e2fdc30857c94d3579843f2a363fce3e07b36db0a",
+          "contractName": "PaymentConditions",
+          "functionName": "refundPayment",
+          "index": 3,
+          "parameters": [
+            {
+              "name": "assetId",
+              "type": "bytes32",
+              "value": "0x0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+            },
+            {
+              "name": "price",
+              "type": "uint256",
+              "value": 10
+            }
+          ],
+          "events": [
+            {
+              "name": "PaymentReleased",
+              "actorType": [
+                "consumer"
+              ],
+              "handlers": {
+                "moduleName": "serviceAgreement",
+                "functionName": "fulfillAgreement",
+                "version": "0.1"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Compute",
+      "serviceEndpoint": "http://localhost:8030/api/v1/brizo/services/compute?pubKey=0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e&serviceId=1&algo=xxx&container=xxx\"",
+      "serviceDefinitionId": "1"
+    },
+    {
+      "type": "Metadata",
+      "serviceEndpoint": "http://localhost:5000/api/v1/provider/assets/metadata/did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+      "serviceDefinitionId": "2",
+      "metadata": {
+        "additionalInformation": {
+          "structuredMarkup": [
+            {
+              "mediaType": "application/ld+json",
+              "uri": "http://skos.um.es/unescothes/C01194/jsonld"
+            },
+            {
+              "mediaType": "text/turtle",
+              "uri": "http://skos.um.es/unescothes/C01194/turtle"
+            }
+          ],
+          "updateFrecuency": "yearly",
+          "checksum": "f12d4ac800b3848dc3f7d46be44b9dee3f4e88d117435b9c8c4623f1665a82b7"
+        },
+        "base": {
+          "name": "Office Humidity",
+          "type": "dataset",
+          "description": "Weather information of UK including temperature and humidity",
+          "size": "3.1gb",
+          "dateCreated": "2018-11-28T17:16:03+00:00",
+          "author": "Met Office",
+          "license": "CC-BY",
+          "copyrightHolder": "Met Office",
+          "encoding": "UTF-8",
+          "compression": "zip",
+          "contentType": "text/csv",
+          "workExample": "stationId,latitude,longitude,datetime,temperature,humidity423432fsd,51.509865,-0.118092,2011-01-01T10:55:11+00:00,7.2,68",
+          "contentUrls": [
+            "0xe9f8111253283962232fb1f05a8b6013eb6a4e36eafff7f860159772232707bff4f62e02a4c2d71b4c7896634fd82fc69fb937e2acd2a98dcc63ad1ac8a9858d4b9104af9703b20d1227f33c61853a5cd2f21cc130268f4c4f82babef8d2c24a48fbe269299d8dafa3aa95e60b255a7cfcbbd38d648975dc3fd4d866ef67052f7f8ac88e757361f65714b610728204a961c07460a49887"
+          ],
+          "links": [
+            {
+              "sample1": "http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-daily/"
+            },
+            {
+              "sample2": "http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-averages-25km/"
+            },
+            {
+              "fieldsDescription": "http://data.ceda.ac.uk/badc/ukcp09/"
+            }
+          ],
+          "inLanguage": "en",
+          "tags": "weather, uk, 2011, temperature, humidity",
+          "price": 10
+        },
+        "curation": {
+          "numVotes": 0,
+          "rating": 0,
+          "schema": "Binary Voting"
+        }
+      }
+    }
+  ]
+}
+

@@ -7,8 +7,7 @@ import logging
 logging.getLogger().setLevel(logging.WARNING)
 
 ocean = Ocean(CONFIG_FILE)
-account = ocean.accounts[ocean.config.parity_address]
-rcpt = account.request_tokens(INPUT)
+rcpt = ocean.main_account.request_tokens(INPUT)
 ocean._web3.eth.waitForTransactionReceipt(rcpt)
 
-print("__result__{} received {} tokens".format(account.address, INPUT))
+print("__result__{} received {} tokens".format(ocean.main_account.address, INPUT))

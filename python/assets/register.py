@@ -24,6 +24,6 @@ service_descriptors = [
                                    purchase_endpoint,
                                    service_endpoint,
                                    600,
-                                   generate_prefixed_id())]
+                                   '0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d')]
 ddo = ocean.register_asset(INPUT, ocean.main_account.address, service_descriptors)
 print("__result__{}".format(json.dumps(ddo.did, indent=2, sort_keys=True)))

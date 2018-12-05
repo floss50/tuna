@@ -2,7 +2,6 @@ import json
 
 from squid_py.ocean.ocean import Ocean
 from squid_py.service_agreement.service_factory import ServiceDescriptor
-from squid_py.utils.utilities import generate_prefixed_id
 
 from ..config import CONFIG_FILE
 from ..input import INPUT

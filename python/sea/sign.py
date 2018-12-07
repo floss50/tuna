@@ -27,6 +27,9 @@ cons_address = ocean.config.get('keeper-contracts', 'parity.address1')
 cons_password = ocean.config.get('keeper-contracts', 'parity.password1')
 ocean.set_main_account(cons_address, cons_password)
 
+rcpt = ocean.main_account.request_tokens(1000)
+ocean._web3.eth.waitForTransactionReceipt(rcpt)
+
 did = INPUT
 ddo = ocean.resolve_did(INPUT)
 service = ddo.get_service(service_type=ServiceTypes.ASSET_ACCESS)
@@ -41,6 +44,7 @@ filter1 = {'serviceAgreementId': Web3.toBytes(hexstr=service_agreement_id)}
 filter_2 = {'serviceId': Web3.toBytes(hexstr=service_agreement_id)}
 
 executed = wait_for_event(ocean.keeper.service_agreement.events.ExecuteAgreement, filter1)
+print(executed)
 assert executed
 granted = wait_for_event(ocean.keeper.access_conditions.events.AccessGranted, filter_2)
 assert granted

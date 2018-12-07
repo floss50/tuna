@@ -16,7 +16,8 @@ const input = require('../input');
 
     const accessService = ddo.findServiceByType('Access')
 
-    const signServiceAgreementResult = await ocean.signServiceAgreement(ddo.id, accessService.serviceDefinitionId, consumerAccount)
+    const signServiceAgreementResult = await ocean
+        .signServiceAgreement(ddo.id, accessService.serviceDefinitionId, consumerAccount)
     Logger.log('ServiceAgreementId', signServiceAgreementResult.serviceAgreementId)
     Logger.log('serviceAgreementSignature', signServiceAgreementResult.serviceAgreementSignature)
 

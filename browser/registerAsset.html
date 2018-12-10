@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../config.js"></script>
+    <script src="https://unpkg.com/@oceanprotocol/squid@0.1.26/dist/browser/squid.window.min.js"></script>
+    <script>
+        console.log(config)
+
+        const metaData = {
+            base: {
+                name: "Office Humidity",
+                type: "dataset",
+                description: "Weather information of UK including temperature and humidity",
+                size: "3.1gb",
+                dateCreated: "2012-02-01T10:55:11+00:00",
+                author: "Met Office",
+                license: "CC-BY",
+                copyrightHolder: "Met Office",
+                encoding: "UTF-8",
+                compression: "zip",
+                contentType: "text/csv",
+                // tslint:disable-next-line
+                workExample: "stationId,latitude,longitude,datetime,temperature,humidity423432fsd,51.509865,-0.118092,2011-01-01T10:55:11+00:00,7.2,68",
+                contentUrls: [
+                    "https://testocnfiles.blob.core.windows.net/testfiles/testzkp.zip",
+                    "https://testocnfiles.blob.core.windows.net/testfiles/testzkp.zip",
+                ],
+                links: [
+                    { sample1: "http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-daily/" },
+                    { sample2: "http://data.ceda.ac.uk/badc/ukcp09/data/gridded-land-obs/gridded-land-obs-averages-25km/" },
+                    { fieldsDescription: "http://data.ceda.ac.uk/badc/ukcp09/" },
+                ],
+                inLanguage: "en",
+                tags: "weather, uk, 2011, temperature, humidity",
+                price: 10,
+            },
+            curation: {
+                rating: 0.93,
+                numVotes: 123,
+                schema: 'Binary Votting'
+            },
+            additionalInformation: {
+                updateFrecuency: "yearly",
+                structuredMarkup: [
+                    {
+                        uri: "http://skos.um.es/unescothes/C01194/jsonld",
+                        mediaType: "application/ld+json",
+                    },
+                    {
+                        uri: "http://skos.um.es/unescothes/C01194/turtle",
+                        mediaType: "text/turtle",
+                    },
+                ],
+            }
+        }
+
+        let ocean = null
+        let publisher = null
+        window.Squid.Ocean
+            .getInstance(config)
+            .then(ocn => {
+                ocean = ocn
+                console.log(ocean)
+                return ocean.getAccounts()
+            })
+            .then(accounts => {
+                publisher = accounts[0]
+                console.log(publisher)
+                console.log(metaData)
+                return ocean.registerAsset(metaData, publisher)
+            })
+            .then(ddo => {
+                console.log(ddo)
+                return ocean.searchAssetsByText("Temperature")
+            })
+            .then(res => {
+                console.log(res)
+            })
+    </script>
+</head>
+<body>
+</body>
+</html>

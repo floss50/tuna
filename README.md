@@ -20,14 +20,128 @@
 
 ## Get started
 
-List orders
 ```bash
-node listOrders.js
+virtualenv venv -p python3
+source venv/bin/activate
+python pip install -r requirements.txt
+npm i
+export CONFIG_FILE=<your_config_file.ini>
 ```
 
-List accounts
+> (*) means there's a bug 
+### Accounts
+#### List
 ```bash
-node listAccounts.js
+> ./tuna.py accounts/list --client={node, python}
+```
+which outputs:
+```json
+[
+  {
+    "id": "0x64137aF0104d2c96C44bb04AC06f09eC84CC5Ae4"
+  }
+]
+```
+#### Balance
+```bash
+> ./tuna.py accounts/balance -c {node, python}
+```
+which outputs:
+```json
+{
+  "eth": 1000000000,
+  "ocn": 400
+}
+```
+
+### Tokens
+#### Request
+```bash
+> ./tuna.py tokens/request -c {node*, python} -i 42 
+```
+which outputs:
+```json
+"42 tokens received"
+```
+
+### Assets
+#### Register
+```bash
+> ./tuna.py assets/register -c {browser, node, python} -f testdata/metadata-example-weather.json 
+```
+which outputs:
+```json
+ did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf
+```
+#### Resolve
+```bash
+> ./tuna.py assets/resolve -c {node, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+ {                                                                                                                                                                                                                                                                                                                       
+  "@context": "https://w3id.org/future-method/v1",                                                                                                                                                                                                                                                                      
+  "authentication": [...],
+  "id": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "publicKey": [...],
+  "service": [...]
+ }
+```
+
+#### Search
+```bash
+> ./tuna.py assets/search -c {node, python*} -i weather 
+```
+which outputs:
+```json
+[  
+    "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+    ...
+]
+```
+
+### Service Execution Agreements
+#### Sign
+```bash
+> ./tuna.py sea/sign -c {node*, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+?
+```
+#### Execute
+```bash
+> ./tuna.py sea/execute -c {node*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+```
+which outputs:
+```json
+?
+```
+
+
+### SecretStore
+#### Encrypt
+```bash
+> ./tuna.py secretstore/encrypt -c {node, python} -i "much secret wow"
+```
+which outputs:
+```json
+{
+  "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
+  "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
+}
+```
+
+#### Decrypt
+```bash
+> ./tuna.py secretstore/decrypt -c {node*, python} -i '{
+  "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
+  "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
+}'
+```
+which outputs:
+```json
+"much secret wow"
 ```
 
 ## License

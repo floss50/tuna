@@ -1,4 +1,4 @@
-const { Ocean, Logger } = require('@oceanprotocol/squid');
+const { Ocean, Logger } = require('@oceanprotocol/squid')
 const config = require('../config');
 
 (async () => {

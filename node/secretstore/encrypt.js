@@ -1,7 +1,7 @@
 const SecretStore = require('@oceanprotocol/secret-store-client').default
 const { Logger } = require('@oceanprotocol/squid')
-const { sha256 } = require('js-sha256');
-const config = require('../config');
+const { sha256 } = require('js-sha256')
+const config = require('../config')
 const input = require('../input');
 
 (async () => {

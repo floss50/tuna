@@ -47,6 +47,7 @@ if args.client in ['browser', 'node']:
         'password': config['keeper-contracts']['parity.password'],
         'address': config['keeper-contracts']['parity.address'],
         'threshold': 0,
+        'verbose': config['squid']['verbose'].lower() in ("yes", "true", "t", "1"),
         'aquariusUri': config['resources']['aquarius.url'],
         'brizoUri': config['resources']['brizo.url'],
     }

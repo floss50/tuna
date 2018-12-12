@@ -57,7 +57,7 @@ which outputs:
 ### Tokens
 #### Request
 ```bash
-> ./tuna.py tokens/request -c {node*, python} -i 42 
+> ./tuna.py tokens/request -c {node, python} -i 42 
 ```
 which outputs:
 ```json
@@ -90,7 +90,7 @@ which outputs:
 
 #### Search
 ```bash
-> ./tuna.py assets/search -c {node, python*} -i weather 
+> ./tuna.py assets/search -c {node, python} -i weather 
 ```
 which outputs:
 ```json

@@ -1,2 +1,7 @@
 node_modules/
 venv/
+squid_py.db
+node/config.js
+node/input.js
+python/config.py
+python/input.py

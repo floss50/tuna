@@ -134,7 +134,7 @@ which outputs:
 
 #### Decrypt
 ```bash
-> ./tuna.py secretstore/decrypt -c {node*, python} -i '{
+> ./tuna.py secretstore/decrypt -c {node, python} -i '{
   "docId": "ded230e093653ae9c27bebe958fdb205a0e053cba8efa9a1c43bbbb5ef81f0d9",
   "encryptedDocument": "0x6653cf03fb81016ad86580c2db3645c6271b6f131c0cc862d5a129e48c861fbd7de40cceb5"
 }'

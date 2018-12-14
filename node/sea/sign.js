@@ -14,38 +14,21 @@ const input = require('../input');
     const account = accounts.filter(account =>
         account.id === config.address)[0]
 
-    const ddo = await ocean.resolveDID(input)
-    Logger.log('DID:', ddo.id)
+    const {
+        did,
+        serviceAgreementId,
+        serviceAgreementHash,
+        serviceDefinitionId
+    } = input
 
-    const accessService = ddo.findServiceByType('Access')
-    console.log(ddo.id, accessService.serviceDefinitionId, account)
+    const serviceAgreementSignature = await web3.eth.sign(serviceAgreementHash, account.getId())
 
-
-    const signServiceAgreementResult = await ocean
-        .signServiceAgreement(ddo.id, accessService.serviceDefinitionId, account)
-
-    const values = ServiceAgreement.getValuesFromService(accessService, signServiceAgreementResult.serviceAgreementId)
-    const valueHashes = ServiceAgreement.createValueHashes(values)
-    const timeoutValues = ServiceAgreement.getTimeoutValuesFromService(accessService)
-
-    const conditionKeys = accessService.conditions.map((condition) => {
-        return condition.conditionKey
-    })
-
-    const hash = ServiceAgreement.hashServiceAgreement(
-        accessService.templateId,
-        signServiceAgreementResult.serviceAgreementId,
-        conditionKeys,
-        valueHashes,
-        timeoutValues)
-    console.log(valueHashes, timeoutValues, conditionKeys, hash)
-
-    await ocean
-        .initializeServiceAgreement(
-            ddo.id,
-            accessService.serviceDefinitionId,
-            signServiceAgreementResult.serviceAgreementId,
-            signServiceAgreementResult.serviceAgreementSignature,
-            account)
-    Logger.log(`__result__${JSON.stringify(signServiceAgreementResult, null, 2)}`)
+    Logger.log(`__result__${JSON.stringify(
+        {
+            did,
+            serviceDefinitionId,
+            serviceAgreementId,
+            serviceAgreementHash,
+            serviceAgreementSignature
+        }, null, 2)}`)
 })()

@@ -115,7 +115,7 @@ which outputs:
 ```
 #### Hash
 ```bash
-> ./tuna.py sea/hash -c {python} -i '{
+> ./tuna.py sea/hash -c {node, python} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
   "serviceDefinitionId": "1"
@@ -132,7 +132,7 @@ which outputs:
 ```
 #### Sign
 ```bash
-> ./tuna.py sea/sign -c {node*, python} -i '{
+> ./tuna.py sea/sign -c {node, python} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
@@ -188,7 +188,7 @@ which outputs:
 ```
 #### Send
 ```bash
-> ./tuna.py sea/send -c {python} -i '{
+> ./tuna.py sea/send -c {node*, python} -i '{
   "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",

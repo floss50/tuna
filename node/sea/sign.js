@@ -1,4 +1,4 @@
-const { Ocean, Logger } = require('@oceanprotocol/squid')
+const { Ocean, Logger, ServiceAgreement } = require('@oceanprotocol/squid')
 const Web3 = require('web3')
 const config = require('../config')
 const input = require('../input');
@@ -12,7 +12,7 @@ const input = require('../input');
 
     const accounts = await ocean.getAccounts()
     const account = accounts.filter(account =>
-        account.id.toLowerCase() === config.address.toLowerCase())[0]
+        account.id === config.address)[0]
 
     const ddo = await ocean.resolveDID(input)
     Logger.log('DID:', ddo.id)
@@ -20,8 +20,25 @@ const input = require('../input');
     const accessService = ddo.findServiceByType('Access')
     console.log(ddo.id, accessService.serviceDefinitionId, account)
 
+
     const signServiceAgreementResult = await ocean
         .signServiceAgreement(ddo.id, accessService.serviceDefinitionId, account)
+
+    const values = ServiceAgreement.getValuesFromService(accessService, signServiceAgreementResult.serviceAgreementId)
+    const valueHashes = ServiceAgreement.createValueHashes(values)
+    const timeoutValues = ServiceAgreement.getTimeoutValuesFromService(accessService)
+
+    const conditionKeys = accessService.conditions.map((condition) => {
+        return condition.conditionKey
+    })
+
+    const hash = ServiceAgreement.hashServiceAgreement(
+        accessService.templateId,
+        signServiceAgreementResult.serviceAgreementId,
+        conditionKeys,
+        valueHashes,
+        timeoutValues)
+    console.log(valueHashes, timeoutValues, conditionKeys, hash)
 
     await ocean
         .initializeServiceAgreement(

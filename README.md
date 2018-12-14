@@ -101,23 +101,121 @@ which outputs:
 ```
 
 ### Service Execution Agreements
-#### Sign
+#### Create
 ```bash
-> ./tuna.py sea/sign -c {node*, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+> ./tuna.py sea/create -c {python} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
 ```
 which outputs:
 ```json
-?
+{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0x27ba400f6c7a4f798d575d6019c76b1ed8953148a2d24feb949a1b6f538f13a9",
+  "serviceDefinitionId": "1"
+}
+```
+#### Hash
+```bash
+> ./tuna.py sea/hash -c {python} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceDefinitionId": "1"
+}' 
+```
+which outputs:
+```json
+{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceDefinitionId": "1"
+}
+```
+#### Sign
+```bash
+> ./tuna.py sea/sign -c {node*, python} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceDefinitionId": "1"
+}' 
+```
+which outputs:
+```json
+{
+  "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
+  "serviceDefinitionId": "1"
+}
+```
+#### Verify
+```bash
+> ./tuna.py sea/verify -c {python} -i '{
+  "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
+  "serviceDefinitionId": "1"
+}' 
+```
+which outputs:
+```json
+{
+  "valid": true
+}
 ```
 #### Execute
 ```bash
-> ./tuna.py sea/execute -c {node*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+> ./tuna.py sea/execute -c {node*, python} -i '{
+  "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
+  "serviceDefinitionId": "1"
+}' 
 ```
 which outputs:
 ```json
-?
+{
+  "blockHash": "0xfc1a02350f7822b56ec499843317d3192d35767f236ac438a7f26376bd525244",
+  "receiptStatus": 1,
+  "transactionHash": "0x3d50131b165e2ef2f48e748ccde81e7122e910dd1bcf1a956c22f9a99503276f"
+}
+```
+#### Send
+```bash
+> ./tuna.py sea/send -c {python} -i '{
+  "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+  "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
+  "serviceDefinitionId": "1"
+}' 
+```
+which outputs:
+```json
+{
+  "response": 201
+}
 ```
 
+### SEA Templates
+#### Create
+```bash
+> ./tuna.py template/register-c {node}
+```
+which outputs:
+```json
+{
+  "receiptStatus": "1",
+  "templateId": "0x27ba400f6c7a4f798d575d6019c76b1ed8953148a2d24feb949a1b6f538f13a9"
+}
+```
 
 ### SecretStore
 #### Encrypt

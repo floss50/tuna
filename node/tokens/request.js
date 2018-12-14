@@ -11,7 +11,9 @@ const input = require('../input');
     await web3.eth.personal.unlockAccount(config.address, config.password)
 
     const accounts = await ocean.getAccounts()
-    const account = accounts.filter(account => account.getId().toLowerCase() === config.address)[0]
+    const account = accounts.filter(account =>
+        account.id.toLowerCase() === config.address.toLowerCase())[0]
+
     await account.requestTokens(input)
     const balance = await account.getOceanBalance()
     Logger.log(balance)

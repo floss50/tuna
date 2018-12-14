@@ -1,8 +1,6 @@
 import json
 
 from squid_py.ocean.ocean import Ocean
-from squid_py.service_agreement.service_agreement import ServiceAgreement
-from squid_py.service_agreement.service_types import ServiceTypes
 
 from ..config import CONFIG_FILE
 from ..input import INPUT
@@ -11,13 +9,29 @@ import logging
 logging.getLogger().setLevel(logging.WARNING)
 
 ocean = Ocean(CONFIG_FILE)
-account = ocean.accounts[ocean.config.parity_address]
-ddo = ocean.resolve_did(INPUT)
+provider_address = ocean.config.get('keeper-contracts', 'provider.address')
+provider_password = ocean.config.get('keeper-contracts', 'provider.password')
+ocean.set_main_account(provider_address, provider_password)
 
-service = ddo.get_service(service_type=ServiceTypes.ASSET_ACCESS)
-sa = ServiceAgreement.from_service_dict(service.as_dictionary())
+did = INPUT['did']
+sa_id = INPUT['serviceAgreementId']
+sa_hash = INPUT['serviceAgreementHash']
+sa_signature = INPUT['serviceAgreementSignature']
+service_id = INPUT['serviceDefinitionId']
+consumer_address = INPUT['consumerAddress']
 
-service_agreement_id = ocean\
-    .sign_service_agreement(ddo.did, sa.sa_definition_id, account)
+receipt = ocean.execute_service_agreement(
+    service_agreement_id=sa_id,
+    service_index=service_id,
+    service_agreement_signature=sa_signature,
+    did=did,
+    consumer_address=consumer_address,
+    publisher_address=ocean.main_account.address)
 
-print("__result__{}".format(json.dumps(service_agreement_id, indent=2, sort_keys=True)))
+print(receipt)
+print("__result__{}".format(json.dumps(
+    {
+        'transactionHash': receipt['transactionHash'].hex(),
+        'blockHash': receipt['blockHash'].hex(),
+        'receiptStatus': receipt['status']
+    }, indent=2, sort_keys=True)))

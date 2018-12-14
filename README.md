@@ -205,9 +205,9 @@ which outputs:
 ```
 
 ### SEA Templates
-#### Create
+#### Register
 ```bash
-> ./tuna.py template/register-c {node}
+> ./tuna.py template/register -c {node}
 ```
 which outputs:
 ```json

@@ -1,10 +1,9 @@
-const { Ocean, Logger, ServiceAgreement } = require('@oceanprotocol/squid')
+const { Ocean, Logger } = require('@oceanprotocol/squid')
 const Web3 = require('web3')
 const config = require('../config')
 const input = require('../input');
 
 (async () => {
-
     const ocean = await Ocean.getInstance(config)
     const web3Provider = config.web3Provider || new Web3.providers.HttpProvider(config.nodeUri)
     const web3 = new Web3(Web3.givenProvider || web3Provider)
@@ -14,38 +13,21 @@ const input = require('../input');
     const account = accounts.filter(account =>
         account.id === config.address)[0]
 
-    const ddo = await ocean.resolveDID(input)
-    Logger.log('DID:', ddo.id)
+    const {
+        did,
+        serviceAgreementId,
+        serviceDefinitionId,
+        serviceAgreementSignature
+    } = input
 
-    const accessService = ddo.findServiceByType('Access')
-    console.log(ddo.id, accessService.serviceDefinitionId, account)
-
-
-    const signServiceAgreementResult = await ocean
-        .signServiceAgreement(ddo.id, accessService.serviceDefinitionId, account)
-
-    const values = ServiceAgreement.getValuesFromService(accessService, signServiceAgreementResult.serviceAgreementId)
-    const valueHashes = ServiceAgreement.createValueHashes(values)
-    const timeoutValues = ServiceAgreement.getTimeoutValuesFromService(accessService)
-
-    const conditionKeys = accessService.conditions.map((condition) => {
-        return condition.conditionKey
-    })
-
-    const hash = ServiceAgreement.hashServiceAgreement(
-        accessService.templateId,
-        signServiceAgreementResult.serviceAgreementId,
-        conditionKeys,
-        valueHashes,
-        timeoutValues)
-    console.log(valueHashes, timeoutValues, conditionKeys, hash)
-
-    await ocean
-        .initializeServiceAgreement(
-            ddo.id,
-            accessService.serviceDefinitionId,
-            signServiceAgreementResult.serviceAgreementId,
-            signServiceAgreementResult.serviceAgreementSignature,
-            account)
-    Logger.log(`__result__${JSON.stringify(signServiceAgreementResult, null, 2)}`)
+    const response = await ocean.initializeServiceAgreement(
+        did,
+        serviceDefinitionId,
+        serviceAgreementId,
+        serviceAgreementSignature,
+        account)
+    Logger.log(response)
+    Logger.log(`__result__${JSON.stringify({
+        'response': response.status
+    }, null, 2)}`)
 })()

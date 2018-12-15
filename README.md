@@ -217,6 +217,16 @@ which outputs:
 }
 ```
 
+### Events
+#### Subscribe
+```bash
+> ./tuna.py events/subscribe -c {node} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+}' 
+```
+which listens to events and takes actions
+
 ### SecretStore
 #### Encrypt
 ```bash

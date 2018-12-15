@@ -29,6 +29,7 @@ const input = require('../input');
             serviceDefinitionId,
             serviceAgreementId,
             serviceAgreementHash,
-            serviceAgreementSignature
+            serviceAgreementSignature,
+            consumerAddress: account.id
         }, null, 2)}`)
 })()

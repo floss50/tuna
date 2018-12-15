@@ -11,11 +11,10 @@ from ..input import INPUT
 import logging
 logging.getLogger().setLevel(logging.WARNING)
 
-
 ocean = Ocean(CONFIG_FILE)
-consumer_address = ocean.config.get('keeper-contracts', 'consumer.address')
-consumer_password = ocean.config.get('keeper-contracts', 'consumer.password')
-ocean.set_main_account(consumer_address, consumer_password)
+account_address = ocean.config.get('keeper-contracts', 'account.address')
+account_password = ocean.config.get('keeper-contracts', 'account.password')
+ocean.set_main_account(account_address, account_password)
 
 did = INPUT['did']
 sa_id = INPUT['serviceAgreementId']
@@ -30,7 +29,7 @@ sa = ServiceAgreement.from_service_dict(service.as_dictionary())
 # Must approve token transfer for this purchase
 ocean._approve_token_transfer(sa.get_price())
 
-payload = prepare_purchase_payload(did, sa_id, service_id, sa_signature, consumer_address)
+payload = prepare_purchase_payload(did, sa_id, service_id, sa_signature, account_address)
 response = ocean._http_client.post(
     sa.purchase_endpoint, data=payload, headers={'content-type': 'application/json'}
 )

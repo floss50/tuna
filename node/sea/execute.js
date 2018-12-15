@@ -1,33 +1,31 @@
 const { Ocean, Logger } = require('@oceanprotocol/squid')
+const Web3 = require('web3')
 const config = require('../config')
 const input = require('../input');
 
 (async () => {
     const ocean = await Ocean.getInstance(config)
+    const web3Provider = config.web3Provider || new Web3.providers.HttpProvider(config.nodeUri)
+    const web3 = new Web3(Web3.givenProvider || web3Provider)
+    await web3.eth.personal.unlockAccount(config.address, config.password)
 
     const accounts = await ocean.getAccounts()
-    const publisherAccount = accounts[0]
-    const consumerAccount = accounts[1]
+    const publisherAccount = accounts.filter(account => account.id === config.address)[0]
 
-    Logger.log('Publisher ID:', publisherAccount.getId())
+    const {
+        did,
+        serviceAgreementId,
+        serviceDefinitionId,
+        serviceAgreementSignature,
+        consumerAddress
+    } = input
 
-    const ddo = await ocean.resolveDID(input)
-    Logger.log('DID:', ddo.id)
-
-    const accessService = ddo.findServiceByType('Access')
-
-    const signServiceAgreementResult = await ocean
-        .signServiceAgreement(ddo.id, accessService.serviceDefinitionId, consumerAccount)
-    Logger.log('ServiceAgreementId', signServiceAgreementResult.serviceAgreementId)
-    Logger.log('serviceAgreementSignature', signServiceAgreementResult.serviceAgreementSignature)
-
-    const serviceAgreement = await ocean
-        .executeServiceAgreement(
-            ddo.id,
-            accessService.serviceDefinitionId,
-            signServiceAgreementResult.serviceAgreementId,
-            signServiceAgreementResult.serviceAgreementSignature,
-            consumerAccount,
-            publisherAccount)
+    const serviceAgreement = await ocean.executeServiceAgreement(
+        did,
+        serviceDefinitionId,
+        serviceAgreementId,
+        serviceAgreementSignature,
+        accounts.filter(account => account.id === consumerAddress)[0],
+        publisherAccount)
     Logger.log('ServiceAgreementId', serviceAgreement.getId())
 })()

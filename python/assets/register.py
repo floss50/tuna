@@ -10,9 +10,9 @@ import logging
 logging.getLogger().setLevel(logging.WARNING)
 
 ocean = Ocean(CONFIG_FILE)
-cons_address = ocean.config.get('keeper-contracts', 'parity.address1')
-cons_password = ocean.config.get('keeper-contracts', 'parity.password1')
-ocean.set_main_account(cons_address, cons_password)
+account_address = ocean.config.get('keeper-contracts', 'account.address')
+account_password = ocean.config.get('keeper-contracts', 'account.password')
+ocean.set_main_account(account_address, account_password)
 
 _url = ocean.config.get('resources', 'brizo.url') if ocean.config.has_option('resources', 'brizo.url') else 'http://localhost:8030'
 brizo_url = '{}/api/v1/brizo'.format(_url)

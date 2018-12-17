@@ -16,7 +16,8 @@ const input = require('../input');
 
     const accessService = ddo.findServiceByType('Access')
 
-    const values = ServiceAgreement.getValuesFromService(accessService, serviceAgreementId)
+    const values = ServiceAgreement.getValuesFromService(accessService,
+        serviceAgreementId.replace('0x', ''))
     const valueHashes = ServiceAgreement.createValueHashes(values)
     const timeoutValues = ServiceAgreement.getTimeoutValuesFromService(accessService)
 
@@ -26,7 +27,7 @@ const input = require('../input');
 
     const serviceAgreementHash = ServiceAgreement.hashServiceAgreement(
         accessService.templateId,
-        serviceAgreementId,
+        serviceAgreementId.replace('0x', ''),
         conditionKeys,
         valueHashes,
         timeoutValues)

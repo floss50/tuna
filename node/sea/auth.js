@@ -1,4 +1,4 @@
-const { Ocean, Logger } = require('@oceanprotocol/squid')
+const { Ocean, Logger, ServiceAgreement } = require('@oceanprotocol/squid')
 const Web3 = require('web3')
 const config = require('../config')
 const input = require('../input');
@@ -15,20 +15,11 @@ const input = require('../input');
 
     const {
         did,
-        serviceAgreementId,
-        serviceAgreementHash,
-        serviceDefinitionId
+        serviceAgreementId
     } = input
 
-    const serviceAgreementSignature = await web3.eth.sign(serviceAgreementHash, account.getId())
-
-    Logger.log(`__result__${JSON.stringify(
-        {
-            did,
-            serviceDefinitionId,
-            serviceAgreementId,
-            serviceAgreementHash,
-            serviceAgreementSignature,
-            consumerAddress: account.id
-        }, null, 2)}`)
+    const assetId = did.replace('did:op:', '')
+    const serviceAgreement = new ServiceAgreement(serviceAgreementId)
+    const accessGranted = await serviceAgreement.grantAccess(assetId, assetId, account)
+    Logger.log(`__result__Asset access granted: ${accessGranted}`)
 })()

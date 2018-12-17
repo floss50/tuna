@@ -20,6 +20,7 @@
 
 ## Get started
 
+### Setup
 ```bash
 virtualenv venv -p python3
 source venv/bin/activate
@@ -28,6 +29,40 @@ npm i
 export CONFIG_FILE=<your_config_file.ini>
 ```
 
+### Usage
+
+We're assuming two config files:
+- Consumer: `config.development.consumer.ini`
+- Provider: `config.development.provider.ini`
+
+```bash
+CONFIG_FILE=config.development.provider.ini
+./tuna.py assets/register -c node -f testdata/metadata-example-weather.json > /tmp/did
+
+CONFIG_FILE=config.development.consumer.ini
+./tuna.py sea/create -c node -f /tmp/did > /tmp/sea
+./tuna.py sea/hash -c node -f /tmp/sea > /tmp/hash
+./tuna.py sea/sign -c node -f /tmp/hash > /tmp/sign
+#./tuna.py events/subscribe -c node -f /tmp/hash > /tmp/sign
+# same as above but more realtime output
+node node/events/subscribe.js
+
+# since the above listener is blocking the terminal, we'll open a second one
+CONFIG_FILE=config.development.provider.ini
+./tuna.py sea/execute -c node -f /tmp/sign
+
+CONFIG_FILE=config.development.consumer.ini
+./tuna.py sea/pay -c node -f /tmp/sign
+
+CONFIG_FILE=config.development.provider.ini
+./tuna.py sea/auth -c node -f /tmp/sign
+
+CONFIG_FILE=config.development.consumer.ini
+./tuna.py assets/consume -c node -f /tmp/sign
+```
+
+
+## API
 > (*) means there's a bug 
 ### Accounts
 #### List
@@ -71,7 +106,9 @@ which outputs:
 ```
 which outputs:
 ```json
- did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf
+{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+}
 ```
 #### Resolve
 ```bash
@@ -95,22 +132,38 @@ which outputs:
 which outputs:
 ```json
 [  
-    "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
-    ...
+  "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  ...
+]
+```
+
+#### Consume
+```bash
+> ./tuna.py assets/consume -c {node} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+}' 
+```
+which outputs:
+```json
+[
+    "list of files"
 ]
 ```
 
 ### Service Execution Agreements
 #### Create
 ```bash
-> ./tuna.py sea/create -c {python} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+> ./tuna.py sea/create -c {node, python} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf"
+}'
 ```
 which outputs:
 ```json
 {
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0x27ba400f6c7a4f798d575d6019c76b1ed8953148a2d24feb949a1b6f538f13a9",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }
 ```
 #### Hash
@@ -118,7 +171,7 @@ which outputs:
 > ./tuna.py sea/hash -c {node, python} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }' 
 ```
 which outputs:
@@ -127,7 +180,7 @@ which outputs:
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }
 ```
 #### Sign
@@ -136,7 +189,7 @@ which outputs:
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }' 
 ```
 which outputs:
@@ -147,7 +200,7 @@ which outputs:
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
   "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }
 ```
 #### Verify
@@ -158,7 +211,7 @@ which outputs:
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
   "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }' 
 ```
 which outputs:
@@ -169,13 +222,13 @@ which outputs:
 ```
 #### Execute
 ```bash
-> ./tuna.py sea/execute -c {node*, python} -i '{
+> ./tuna.py sea/execute -c {node, python} -i '{
   "consumerAddress": "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e",
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
   "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }' 
 ```
 which outputs:
@@ -194,7 +247,7 @@ which outputs:
   "serviceAgreementHash": "0x46db8fc90fd0cc2b9bd958cb6caf00b922952ead5a61acfe996238c882359aaa",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
   "serviceAgreementSignature": "0x9f88c3e4c69bcc4d7136415a1793da49c6e1432745f32bea4b5e4a1f231a2e5d5de162b2d103ea95394a0c867ef5545e54b12468a8700ee0a8f780c0593820191b",
-  "serviceDefinitionId": "1"
+  "serviceDefinitionId": "0"
 }' 
 ```
 which outputs:
@@ -204,10 +257,28 @@ which outputs:
 }
 ```
 
+#### Pay
+```bash
+> ./tuna.py sea/pay -c {node} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+}' 
+```
+which generates an `PaymentLocked` event
+
+#### Auth
+```bash
+> ./tuna.py sea/auth -c {node} -i '{
+  "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
+  "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
+}' 
+```
+which generates an `AccessGranted` event
+
 ### SEA Templates
 #### Create
 ```bash
-> ./tuna.py template/register-c {node}
+> ./tuna.py template/register -c {node}
 ```
 which outputs:
 ```json
@@ -225,7 +296,7 @@ which outputs:
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
 }' 
 ```
-which listens to events and takes actions
+which listens to events and displays them for triggering callbacks manually
 
 ### SecretStore
 #### Encrypt

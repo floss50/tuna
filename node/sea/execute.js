@@ -23,7 +23,7 @@ const input = require('../input');
     const serviceAgreement = await ocean.executeServiceAgreement(
         did,
         serviceDefinitionId,
-        serviceAgreementId,
+        serviceAgreementId.replace('0x', ''),
         serviceAgreementSignature,
         accounts.filter(account => account.id === consumerAddress)[0],
         publisherAccount)

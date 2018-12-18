@@ -16,19 +16,18 @@ const input = require('../input');
     const {
         did,
         serviceAgreementId,
-        serviceAgreementHash,
-        serviceDefinitionId
+        serviceDefinitionId,
+        serviceAgreementSignature
     } = input
 
-    const serviceAgreementSignature = await web3.eth.sign(serviceAgreementHash, account.getId())
-
-    Logger.log(`__result__${JSON.stringify(
-        {
-            did,
-            serviceDefinitionId,
-            serviceAgreementId,
-            serviceAgreementHash,
-            serviceAgreementSignature,
-            consumerAddress: account.id
-        }, null, 2)}`)
+    const response = await ocean.initializeServiceAgreement(
+        did,
+        serviceDefinitionId,
+        serviceAgreementId,
+        serviceAgreementSignature,
+        account)
+    Logger.log(response)
+    Logger.log(`__result__${JSON.stringify({
+        'response': response.status
+    }, null, 2)}`)
 })()

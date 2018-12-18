@@ -2,7 +2,7 @@
 
 # tuna
 
-> JavaScript samples of the 🦑 client library for Ocean Protocol
+> Cross environment samples of the 🦑 client library for Ocean Protocol
 > [oceanprotocol.com](https://oceanprotocol.com)
 
 ---
@@ -50,6 +50,7 @@ CONFIG_FILE=config.development.consumer.ini
 # same as above but more realtime output
 node node/events/subscribe.js
 
+# since the above listener is blocking the terminal, we'll open a second one
 CLIENT=node
 CONFIG_FILE=config.development.provider.ini
 ./tuna.py sea/execute -c ${CLIENT} -f /tmp/sign

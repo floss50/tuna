@@ -36,29 +36,32 @@ We're assuming two config files:
 - Provider: `config.development.provider.ini`
 
 ```bash
+#!/usr/bin/env bash
+
+CLIENT=node
 CONFIG_FILE=config.development.provider.ini
-./tuna.py assets/register -c node -f testdata/metadata-example-weather.json > /tmp/did
+./tuna.py assets/register -c ${CLIENT} -f testdata/metadata-example-weather.json > /tmp/did
 
 CONFIG_FILE=config.development.consumer.ini
-./tuna.py sea/create -c node -f /tmp/did > /tmp/sea
-./tuna.py sea/hash -c node -f /tmp/sea > /tmp/hash
-./tuna.py sea/sign -c node -f /tmp/hash > /tmp/sign
-#./tuna.py events/subscribe -c node -f /tmp/hash > /tmp/sign
+./tuna.py sea/create -c ${CLIENT} -f /tmp/did > /tmp/sea
+./tuna.py sea/hash -c ${CLIENT} -f /tmp/sea > /tmp/hash
+./tuna.py sea/sign -c ${CLIENT} -f /tmp/hash > /tmp/sign
+#./tuna.py events/subscribe -c ${CLIENT} -f /tmp/hash
 # same as above but more realtime output
 node node/events/subscribe.js
 
-# since the above listener is blocking the terminal, we'll open a second one
+CLIENT=node
 CONFIG_FILE=config.development.provider.ini
-./tuna.py sea/execute -c node -f /tmp/sign
+./tuna.py sea/execute -c ${CLIENT} -f /tmp/sign
 
 CONFIG_FILE=config.development.consumer.ini
-./tuna.py sea/pay -c node -f /tmp/sign
+./tuna.py sea/pay -c ${CLIENT} -f /tmp/sign
 
 CONFIG_FILE=config.development.provider.ini
-./tuna.py sea/auth -c node -f /tmp/sign
+./tuna.py sea/auth -c ${CLIENT} -f /tmp/sign
 
 CONFIG_FILE=config.development.consumer.ini
-./tuna.py assets/consume -c node -f /tmp/sign
+./tuna.py assets/consume -c ${CLIENT} -f /tmp/sign
 ```
 
 

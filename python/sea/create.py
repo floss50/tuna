@@ -9,9 +9,9 @@ import logging
 logging.getLogger().setLevel(logging.WARNING)
 
 ocean = Ocean(CONFIG_FILE)
-did = INPUT
+did = INPUT['did']
 
-service_id = '1'
+service_id = '0'
 sa_id, sa, _, _ = ocean._get_service_agreement_to_sign(did, service_id)
 
 print("__result__{}".format(json.dumps(

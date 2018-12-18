@@ -25,14 +25,6 @@ service = ddo.get_service(service_type=ServiceTypes.ASSET_ACCESS)
 sa = ServiceAgreement.from_service_dict(service.as_dictionary())
 
 ocean.main_account.unlock()
-sa_signature, _ = sa.get_signed_agreement_hash(ocean._web3, ocean.keeper.contract_path, sa_id, account_address)
+ocean.consume_service(sa_id, did, service_id, ocean.main_account)
 
-print("__result__{}".format(json.dumps(
-    {
-        'did': did,
-        'serviceDefinitionId': service_id,
-        'serviceAgreementId': sa_id,
-        'serviceAgreementHash': sa_hash,
-        'serviceAgreementSignature': sa_signature,
-        'consumerAddress': account_address
-    }, indent=2, sort_keys=True)))
+print("__result__{}".format('consumed'))

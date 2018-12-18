@@ -112,7 +112,7 @@ which outputs:
 ```
 #### Resolve
 ```bash
-> ./tuna.py assets/resolve -c {node, python*} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
+> ./tuna.py assets/resolve -c {node, python} -i did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf 
 ```
 which outputs:
 ```json
@@ -139,7 +139,7 @@ which outputs:
 
 #### Consume
 ```bash
-> ./tuna.py assets/consume -c {node} -i '{
+> ./tuna.py assets/consume -c {node, python*} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
 }' 
@@ -259,7 +259,7 @@ which outputs:
 
 #### Pay
 ```bash
-> ./tuna.py sea/pay -c {node} -i '{
+> ./tuna.py sea/pay -c {node, python*} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
 }' 
@@ -268,7 +268,7 @@ which generates an `PaymentLocked` event
 
 #### Auth
 ```bash
-> ./tuna.py sea/auth -c {node} -i '{
+> ./tuna.py sea/auth -c {node, python*} -i '{
   "did": "did:op:0bd1318b7a324557ae311d40dad8cc890f4547dd125e413d8bbd42fc74ca8caf",
   "serviceAgreementId": "0xc8e5b66e157f4afe89b9c8673b01be034321fb8660a94bada3f13a606efffb72",
 }' 
